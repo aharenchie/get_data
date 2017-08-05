@@ -15,12 +15,40 @@ if (argc != 2):
         print ('please type "python %s url.txt"'%argvs[0])
         sys.exit()
 
+"""
+文章を区切って、文にする
+入力：クローリングした文章
+出力：文
+"""
+
 def splitSentence(input):
+        input = input.translate(str.maketrans(",","、")) # 句点と区切り点の変換
+
+        # 句読点を区切り点に変換
         symbols = ['w','W','ｗ','W','.','。','?','？','!','！']
         for symbol in symbols:
                 if symbol in input:
                         input = input.translate(str.maketrans(symbol,","))
-        return input
+
+        # 改行を区切りとする文への対策
+        div_flag = False
+        div_ti = 100
+        new_text = ""
+        for i,v in enumerate(input):
+
+                if v == ',':
+                        div_flag = True
+        
+                if i == div_ti:        
+                        if div_flag == False:
+                                new_text = input.replace('<br/>', ',')
+                        else:
+                                new_text = input.replace('<br/>', '')
+                        break
+            
+                        div_flag = False
+                        
+        return new_text
 
 
 if __name__ == "__main__" :
@@ -59,10 +87,9 @@ if __name__ == "__main__" :
                 texts=""
                 review=""
         
-                for n,j in enumerate(review_data):
-                        text = str(j).strip()
-                        if text != "<br/>":                                
-                                texts += text
+                for j in review_data:
+                        text = str(j).strip()                                
+                        texts += text
                                 
                 review = splitSentence(texts)
                 output.append(review)
