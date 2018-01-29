@@ -5,6 +5,8 @@ import csv
 import re
 import string
 import urllib.request
+from datetime import datetime
+from time import sleep
 from bs4 import BeautifulSoup
 
 # 入力出力チェック
@@ -55,10 +57,16 @@ if __name__ == "__main__" :
         #0. ファイル読み書き準備
         input_f = open(argvs[1], 'r')
 
-        output_f = open('data.csv', 'w')
+        file_name = "data"+datetime.now().strftime("%Y-%m-%dat%H:%M:%S")
+        output_f = open(file_name, 'w')
         writer = csv.writer(output_f, lineterminator='\n')
 
         for i,row in enumerate(input_f):
+
+                # スクレイピングバン防止のため
+                if i % 10 == 0:
+                        sleep(1)
+                        
                 url = row.strip()
         
                 #1-1. Webページ取得
